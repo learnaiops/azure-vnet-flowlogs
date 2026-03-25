@@ -1,0 +1,39 @@
+# VNet Flow Logs policy assignment configuration.
+# One entry per region. The policy automatically covers all VNets in the region.
+# subscription_id is injected automatically by Terraform — do not edit that placeholder.
+#
+# Network Watcher is resolved automatically from Azure convention (NetworkWatcherRG / NetworkWatcher_{region}).
+#
+# Fields per assignment:
+#   name                  - unique key used in resource names (alphanumeric and hyphens only)
+#   region                - Azure region for this assignment
+#   storage_account_id    - resource ID of storage account for flow log storage (must be in same region as VNets)
+#   workspace_resource_id - resource ID of Log Analytics workspace for Traffic Analytics
+#   workspace_region      - Azure region where the Log Analytics workspace is deployed (may differ from VNet region)
+#   time_interval         - Traffic Analytics processing interval in minutes: "10" or "60"
+#   retention_days        - days to retain flow logs in storage (0 = retain forever)
+
+assignments:
+  - name: "eastus"
+    region: "eastus"
+    storage_account_id: "/subscriptions/${subscription_id}/resourceGroups/rg-infra-example/providers/Microsoft.Storage/storageAccounts/savnetflowlogsdemo24"
+    workspace_resource_id: "/subscriptions/${subscription_id}/resourceGroups/rg-infra-example/providers/Microsoft.OperationalInsights/workspaces/law-vnetflowlogs-demo-24"
+    workspace_region: "eastus"
+    time_interval: "10"
+    retention_days: 30
+
+  - name: "uksouth"
+    region: "uksouth"
+    storage_account_id: "/subscriptions/${subscription_id}/resourceGroups/rg-infra-example-uksouth/providers/Microsoft.Storage/storageAccounts/savnetflowlogsdemo24uk"
+    workspace_resource_id: "/subscriptions/${subscription_id}/resourceGroups/rg-infra-example/providers/Microsoft.OperationalInsights/workspaces/law-vnetflowlogs-demo-24"
+    workspace_region: "eastus"
+    time_interval: "10"
+    retention_days: 30
+
+  # Add more regions below as needed. Example:
+  # - name: "westeurope"
+  #   region: "westeurope"
+  #   storage_account_id: "/subscriptions/${subscription_id}/resourceGroups/rg-network/providers/Microsoft.Storage/storageAccounts/stflowlogsweu"
+  #   workspace_resource_id: "/subscriptions/${subscription_id}/resourceGroups/rg-network/providers/Microsoft.OperationalInsights/workspaces/law-flowlogs-weu"
+  #   time_interval: "60"
+  #   retention_days: 30
